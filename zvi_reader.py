@@ -36,8 +36,6 @@ class ZVI(FramesSequence):
     process_func : function, optional
         callable with signalture `proc_img = process_func(img)`,
         which will be applied to the data from each frame
-    dtype : numpy datatype, optional
-        Image arrays will be converted to this datatype.
     as_grey : boolean, optional
         Convert color images to greyscale. False by default.
         May not be used in conjection with process_func.
@@ -64,7 +62,7 @@ class ZVI(FramesSequence):
     @classmethod
     def class_exts(cls):
         # TODO extend this set to match reality
-        return {'zvi'} | super(OleImages, cls).class_exts()
+        return {'zvi'} | super(ZVI, cls).class_exts()
 
     def __init__(self, filename, process_func=None, dtype=None,
                  as_grey=False):
@@ -72,9 +70,7 @@ class ZVI(FramesSequence):
         self._ole = OleFileIO(self._filename)
         self._streams = self._ole.listdir()
 
-        if dtype is not None:
-            raise ValueError("This reader ignored dtype and used uint16.")
-        self._dtype = np.dtype('<i16')
+        self._dtype = np.uint16
 
         self._im_sz = (656, 492)  # TODO
 
