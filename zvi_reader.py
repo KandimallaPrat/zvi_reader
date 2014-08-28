@@ -23,8 +23,9 @@ class ZVI(FramesSequence):
     """Read ZVI image sequences (single files containing many images) into an
     iterable object that returns images as numpy arrays.
 
-    WARNING: This code is alpha code. The image size and data type are
-    hard-coded, and not ready for general use.
+    WARNING: This code is alpha code. It cannot interpret the ZVI metadata.
+    Thus, the image shape must be specified manually (see example below) and
+    the data type (16-bit grayscale) is hard-coded in this implementation.
 
     This reader, which relies on OleFileIO and PIL/Pillow, is tested on
     Zeiss AxioVision ZVI files. It should also read Olympus FluoView OIB files
@@ -42,7 +43,7 @@ class ZVI(FramesSequence):
 
     Examples
     --------
-    >>> video = ZVI('filename.zvi')
+    >>> video = ZVI('filename.zvi', (660, 492))  # must specify shape manually
     >>> imshow(video[0]) # Show the first frame.
     >>> imshow(video[-1]) # Show the last frame.
     >>> imshow(video[1][0:10, 0:10]) # Show one corner of the second frame.
@@ -64,7 +65,7 @@ class ZVI(FramesSequence):
         # TODO extend this set to match reality
         return {'zvi'} | super(ZVI, cls).class_exts()
 
-    def __init__(self, filename, process_func=None, dtype=None,
+    def __init__(self, filename, shape, process_func=None, dtype=None,
                  as_grey=False):
         self._filename = filename
         self._ole = OleFileIO(self._filename)
@@ -72,7 +73,7 @@ class ZVI(FramesSequence):
 
         self._dtype = np.uint16
 
-        self._im_sz = (656, 492)  # TODO
+        self._im_sz = shape
 
         self._toc = []
         for stream in self._streams:
