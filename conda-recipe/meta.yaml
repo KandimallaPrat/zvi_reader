@@ -1,0 +1,34 @@
+package:
+  name: zvi_reader
+  version: 0.1
+
+source:
+  git_url: ../
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - six
+    - numpy
+    - pims
+    - olefileio_pl
+    - pillow
+
+  run:
+    - python
+    - six
+    - numpy >=1.7
+    - pims >=0.2.2
+    - olefileio_pl
+    - pillow
+
+test:
+  imports:
+    - pims
+    - zvi_reader
+
+about:
+  home: http://trackpy.readthedocs.org
+  license: 3-clause BSD License
+  summary: 'Python particle-tracking toolkit'
